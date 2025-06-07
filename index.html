@@ -334,6 +334,9 @@
         const modalDate = document.getElementById('modalDate');
         const closeButton = document.querySelector('.close-button');
 
+        // Discord Webhook URL
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1381037291052601537/EQPPGauoQ2tifEchjZzgVV4PPuu7SfSJu6pBL8Rng-UitBJUiqDp8GgDPPDkCyePY6C1";
+
         // Function to calculate "one year ago" for a given date
         function getRelativeDate(dateString) {
             const videoDate = new Date(dateString);
@@ -351,6 +354,25 @@
             } else {
                 return dateString;
             }
+        }
+
+        // Function to send a message to Discord webhook
+        function sendDiscordMessage(message) {
+            fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content: message }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Failed to send Discord message:', response.status, response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error sending Discord message:', error);
+            });
         }
 
         function createVideoCard(video) {
@@ -377,6 +399,7 @@
 
             videoCard.addEventListener('click', () => {
                 showModal(video);
+                sendDiscordMessage(`Someone clicked on "${video.title}" nice job!`);
             });
 
             return videoCard;
