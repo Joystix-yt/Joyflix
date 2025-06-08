@@ -3,439 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyflix</title>
+    <title>Joyflix - Under Maintenance</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-        :root {
-            --primary-color: #8e2de2;
-            --secondary-color: #4a00e0;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-color: #e0e0e0;
-            --card-hover-scale: 1.05;
-            --transition-speed: 0.3s ease;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--text-color);
+            font-family: 'Exo 2', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a0033 25%, #000428 50%, #004e92 75%, #000428 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
             position: relative;
         }
-
-        body::before {
-            content: '';
+        
+        /* Animated background stars */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .star {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            animation: backgroundAnimation 20s infinite alternate;
-            z-index: -1;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out alternate;
         }
-
-        @keyframes backgroundAnimation {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(5%, 5%); }
-            100% { transform: translate(0, 0); }
+        
+        .star:nth-child(odd) {
+            animation-delay: 0.5s;
         }
-
+        
+        .star:nth-child(3n) {
+            animation-delay: 1s;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 8s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Main container */
         .container {
-            width: 90%;
-            max-width: 1200px;
-            background: var(--glass-bg);
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            padding: 30px;
-            animation: fadeIn 1s ease-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
             position: relative;
             z-index: 10;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        header h1 {
-            font-size: 3em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #a1ffce, #faffd1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: textGlow 1.5s infinite alternate;
-        }
-
-        @keyframes textGlow {
-            from { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
-            to { text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
-        }
-
-        header p {
-            font-size: 1.2em;
-            color: var(--text-color);
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .video-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            overflow: hidden;
+        
+        /* Glassmorphic card */
+        .maintenance-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-            cursor: pointer;
-            position: relative;
-            padding-bottom: 10px; /* Space for text */
-        }
-
-        .video-card:hover {
-            transform: scale(var(--card-hover-scale));
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-        }
-
-        .video-card img {
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            box-shadow: 
+                0 25px 45px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            max-width: 600px;
             width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: opacity var(--transition-speed);
+            position: relative;
+            overflow: hidden;
+            animation: cardGlow 3s ease-in-out infinite alternate;
         }
-
-        .video-card:hover img {
-            opacity: 0.8;
+        
+        @keyframes cardGlow {
+            0% { box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 40px rgba(0, 123, 255, 0.1); }
+            100% { box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 60px rgba(0, 123, 255, 0.3); }
         }
-
-        .video-info {
-            padding: 15px;
-        }
-
-        .video-info h3 {
-            font-size: 1.4em;
-            margin-bottom: 10px;
-            color: var(--text-color);
-            line-height: 1.3;
-        }
-
-        .video-info p {
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
+        
+        .maintenance-card::before {
+            content: '';
+            position: absolute;
             top: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
         }
-
-        .modal.active {
-            display: flex;
-            opacity: 1;
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
-
-        .modal-content {
-            background: var(--glass-bg);
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            padding: 20px;
-            position: relative;
-            width: 90%;
-            max-width: 900px;
-            animation: slideIn 0.4s ease-out;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        
+        /* Logo and branding */
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: logoFloat 4s ease-in-out infinite;
         }
-
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
-
-        .modal-content video {
-            width: 100%;
-            border-radius: 10px;
-            display: block;
-            margin-bottom: 20px;
+        
+        .tagline {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
         }
-
-        .modal-content h2 {
-            color: var(--text-color);
-            margin-bottom: 10px;
-            font-size: 2em;
+        
+        /* Main heading */
+        .maintenance-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: titlePulse 2s ease-in-out infinite alternate;
         }
-
-        .modal-content p {
+        
+        @keyframes titlePulse {
+            0% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            100% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 40px rgba(0, 123, 255, 0.4); }
+        }
+        
+        /* Description text */
+        .maintenance-description {
             color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
         }
-
-        .close-button {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            color: var(--text-color);
-            font-size: 2.5em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s ease;
+        
+        .highlight {
+            color: #4ecdc4;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
         }
-
-        .close-button:hover {
-            transform: scale(1.1);
+        
+        /* Loading animation */
+        .loading-container {
+            margin: 2rem 0;
         }
-
-        /* Responsive adjustments */
+        
+        .loading-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+            border-radius: 10px;
+            animation: loading 2s ease-in-out infinite;
+        }
+        
+        @keyframes loading {
+            0% { width: 20%; transform: translateX(-100%); }
+            50% { width: 60%; transform: translateX(0%); }
+            100% { width: 20%; transform: translateX(400%); }
+        }
+        
+        .loading-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            animation: loadingDots 1.5s infinite;
+        }
+        
+        @keyframes loadingDots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+        
+        .loading-text::after {
+            content: '';
+            animation: loadingDots 1.5s infinite;
+        }
+        
+        /* Rocket icon */
+        .rocket {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: rocketFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+        }
+        
+        @keyframes rocketFloat {
+            0%, 100% { transform: translateY(0px) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        
+        /* Status indicator */
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            animation: statusPulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+        
+        /* Responsive design */
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 2.5em;
+            .logo {
+                font-size: 2.5rem;
             }
-
-            .container {
-                padding: 20px;
+            
+            .maintenance-title {
+                font-size: 1.8rem;
             }
-
-            .video-grid {
-                grid-template-columns: 1fr;
+            
+            .maintenance-description {
+                font-size: 1rem;
             }
-
-            .video-card {
-                height: auto; /* Adjust height for better mobile display */
+            
+            .maintenance-card {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
             }
-
-            .video-card img {
-                height: 180px;
-            }
-
-            .video-info h3 {
-                font-size: 1.2em;
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 15px;
-            }
-
-            .close-button {
-                font-size: 2em;
-                top: 10px;
-                right: 15px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 2em;
-            }
-
-            .video-info h3 {
-                font-size: 1.1em;
-            }
-
-            .video-card img {
-                height: 150px;
+            
+            .rocket {
+                font-size: 3rem;
             }
         }
     </style>
 </head>
 <body>
+    <div class="stars"></div>
+    
     <div class="container">
-        <header>
-            <h1>Joyflix</h1>
-            <p>Your source for epic Gorilla Tag content!</p>
-        </header>
-
-        <main class="video-grid" id="video-grid">
-            </main>
-    </div>
-
-    <div id="videoModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <video id="modalVideo" controls autoplay></video>
-            <h2 id="modalTitle"></h2>
-            <p id="modalDate"></p>
+        <div class="maintenance-card">
+            <div class="rocket">🚀</div>
+            <h1 class="logo">JOYFLIX</h1>
+            <p class="tagline">Streaming Beyond the Stars</p>
+            
+            <h2 class="maintenance-title">Under Maintenance</h2>
+            
+            <p class="maintenance-description">
+                We're making Joyflix even more <span class="highlight">awesome</span> with 
+                <span class="highlight">higher quality video</span> streaming! 
+                Our space engineers are upgrading our systems to deliver an 
+                out-of-this-world viewing experience.
+            </p>
+            
+            <div class="loading-container">
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <p class="loading-text">Upgrading systems</p>
+            </div>
+            
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>Systems optimizing...</span>
+            </div>
         </div>
     </div>
-
+    
     <script>
-        const videos = [
-            {
-                title: "THIS NEW UPDATE ADDS FALL GUYS IN GORILLA TAG!",
-                thumbnail: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/main/mqdefault.webp",
-                videoLink: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/videos/THIS%20NEW%20UPDATE%20ADDS%20FALL%20GUYS%20IN%20GORILLA%20TAG!!.webm",
-                dateCreated: "Mar 24, 2024"
-            },
-            {
-                title: "Last to leave pyramid map wins",
-                thumbnail: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/main/hqdefault.webp",
-                videoLink: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/videos/Last%20to%20leave%20pyramid%20map%20wins%20480p.webm",
-                dateCreated: "Mar 11, 2024"
-            },
-            {
-                title: "HORROR MODE AND SUMMER IN GORILLA TAG! (with @CloudGamingGT)",
-                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/main/mqdefault.jpg?raw=true",
-                videoLink: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/main/oldupdate.webm",
-                dateCreated: "Jun 20, 2024" 
-            },
-            {
-                title: "GORILLA TAG LEGO UPDATE!",
-                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/legothumb.jpg?raw=true",
-                videoLink: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/videos/GORILLA%20TAG%20LEGO%20UPDATE!.webm",
-                dateCreated: "Jul 15, 2024" 
-            },
-            {
-                title: "Tag them in the game 🎮🎶 #NewMusicVideo #GamingVibes",
-                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/musictn.jpg?raw=true",
-                videoLink: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/videos/Tag%20them%20in%20the%20game%20%F0%9F%8E%AE%F0%9F%8E%B6%20%23NewMusicVideo%20%23GamingVibes.webm",
-                dateCreated: "Jul 23, 2024" 
-            }
-        ];
-
-        const videoGrid = document.getElementById('video-grid');
-        const videoModal = document.getElementById('videoModal');
-        const modalVideo = document.getElementById('modalVideo');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalDate = document.getElementById('modalDate');
-        const closeButton = document.querySelector('.close-button');
-
-        // Discord Webhook URL
-        const WEBHOOK_URL = "https://discord.com/api/webhooks/1381037291052601537/EQPPGauoQ2tifEchjZzgVV4PPuu7SfSJu6pBL8Rng-UitBJUiqDp8GgDPPDkCyePY6C1";
-
-        // Function to calculate "one year ago" for a given date
-        function getRelativeDate(dateString) {
-            const videoDate = new Date(dateString);
-            const now = new Date();
-            const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-
-            // Check if the video date is exactly one year ago today, or in the same year-ago range
-            if (videoDate.toDateString() === oneYearAgo.toDateString() || 
-                (videoDate.getFullYear() === now.getFullYear() - 1 && 
-                 videoDate.getMonth() === now.getMonth() && 
-                 videoDate.getDate() > now.getDate()) ||
-                (videoDate.getFullYear() === now.getFullYear() - 1 && 
-                 videoDate.getMonth() > now.getMonth())) {
-                return dateString + " (one year ago)";
-            } else {
-                return dateString;
+        // Generate random stars
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            const numberOfStars = 150;
+            
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
             }
         }
-
-        // Function to send a message to Discord webhook
-        function sendDiscordMessage(message) {
-            fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ content: message }),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.error('Failed to send Discord message:', response.status, response.statusText);
-                }
-            })
-            .catch(error => {
-                console.error('Error sending Discord message:', error);
+        
+        // Generate floating particles
+        function createParticles() {
+            const body = document.body;
+            
+            setInterval(() => {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 6 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particle.style.animationDuration = (Math.random() * 6 + 6) + 's';
+                
+                body.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 12000);
+            }, 300);
+        }
+        
+        // Animate loading text dots
+        function animateLoadingText() {
+            const loadingText = document.querySelector('.loading-text');
+            const baseText = 'Upgrading systems';
+            let dots = '';
+            
+            setInterval(() => {
+                dots = dots.length >= 3 ? '' : dots + '.';
+                loadingText.textContent = baseText + dots;
+            }, 500);
+        }
+        
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            createParticles();
+            animateLoadingText();
+            
+            // Add some interactive effects
+            const card = document.querySelector('.maintenance-card');
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+                this.style.transition = 'all 0.3s ease';
             });
-        }
-
-        function createVideoCard(video) {
-            const videoCard = document.createElement('div');
-            videoCard.classList.add('video-card');
-
-            const thumbnail = document.createElement('img');
-            thumbnail.src = video.thumbnail;
-            thumbnail.alt = video.title;
-
-            const videoInfo = document.createElement('div');
-            videoInfo.classList.add('video-info');
-
-            const title = document.createElement('h3');
-            title.textContent = video.title;
-
-            const date = document.createElement('p');
-            date.textContent = getRelativeDate(video.dateCreated);
-
-            videoInfo.appendChild(title);
-            videoInfo.appendChild(date);
-            videoCard.appendChild(thumbnail);
-            videoCard.appendChild(videoInfo);
-
-            videoCard.addEventListener('click', () => {
-                showModal(video);
-                sendDiscordMessage(`Someone clicked on "${video.title}" nice job!`);
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
             });
-
-            return videoCard;
-        }
-
-        function loadVideos() {
-            videos.forEach(video => {
-                videoGrid.appendChild(createVideoCard(video));
-            });
-        }
-
-        function showModal(video) {
-            modalVideo.src = video.videoLink;
-            modalTitle.textContent = video.title;
-            modalDate.textContent = "Posted: " + getRelativeDate(video.dateCreated);
-            videoModal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
-        }
-
-        function closeModal() {
-            videoModal.classList.remove('active');
-            modalVideo.pause();
-            modalVideo.currentTime = 0;
-            document.body.style.overflow = 'auto'; // Allow scrolling when modal is closed
-        }
-
-        // Event Listeners
-        closeButton.addEventListener('click', closeModal);
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) {
-                closeModal();
-            }
         });
-
-        // Load videos when the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', loadVideos);
+        
+        // Add subtle parallax effect to stars
+        document.addEventListener('mousemove', function(e) {
+            const stars = document.querySelectorAll('.star');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            stars.forEach(star => {
+                const speed = parseFloat(star.style.width) * 0.5;
+                star.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
     </script>
 </body>
 </html>
