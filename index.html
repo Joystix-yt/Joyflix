@@ -31,7 +31,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Fix: Prevent horizontal scrolling */
             position: relative;
         }
 
@@ -97,10 +97,46 @@
             color: var(--text-color);
         }
 
+        .tab-switcher {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .tab-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-color);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 10px;
+            margin: 0 10px;
+            transition: background var(--transition-speed), transform var(--transition-speed);
+        }
+
+        .tab-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: var(--primary-color);
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 15px rgba(142, 45, 226, 0.5);
+        }
+
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
+        }
+
+        .shorts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjusted for portrait */
+            gap: 20px;
         }
 
         .video-card {
@@ -113,7 +149,7 @@
             transition: transform var(--transition-speed), box-shadow var(--transition-speed);
             cursor: pointer;
             position: relative;
-            padding-bottom: 10px; /* Space for text */
+            padding-bottom: 10px;
         }
 
         .video-card:hover {
@@ -123,13 +159,21 @@
 
         .video-card img {
             width: 100%;
-            height: 200px;
+            height: 200px; /* For landscape videos */
             object-fit: cover;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: opacity var(--transition-speed);
         }
 
-        .video-card:hover img {
+        .shorts-card img {
+            width: 100%;
+            height: 350px; /* Adjusted for portrait shorts */
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: opacity var(--transition-speed);
+        }
+
+        .video-card:hover img, .shorts-card:hover img {
             opacity: 0.8;
         }
 
@@ -182,6 +226,10 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
+        .modal-content.short {
+            max-width: 400px; /* Adjusted for portrait shorts */
+        }
+
         @keyframes slideIn {
             from { transform: translateY(-50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -230,16 +278,20 @@
                 padding: 20px;
             }
 
-            .video-grid {
+            .video-grid, .shorts-grid {
                 grid-template-columns: 1fr;
             }
 
-            .video-card {
-                height: auto; /* Adjust height for better mobile display */
+            .video-card, .shorts-card {
+                height: auto;
             }
 
             .video-card img {
                 height: 180px;
+            }
+
+            .shorts-card img {
+                height: 300px; /* Adjusted for mobile portrait */
             }
 
             .video-info h3 {
@@ -249,6 +301,10 @@
             .modal-content {
                 width: 95%;
                 padding: 15px;
+            }
+
+            .modal-content.short {
+                max-width: 95%; /* Make shorts modal full width on small screens */
             }
 
             .close-button {
@@ -270,6 +326,10 @@
             .video-card img {
                 height: 150px;
             }
+
+            .shorts-card img {
+                height: 250px;
+            }
         }
     </style>
 </head>
@@ -277,11 +337,15 @@
     <div class="container">
         <header>
             <h1>Joyflix</h1>
-            <p>Your source for epic Gorilla Tag content!</p>
+            <p>Your source for epic content!</p>
         </header>
 
-        <main class="video-grid" id="video-grid">
-            </main>
+        <div class="tab-switcher">
+            <button class="tab-button active" id="videosTab">Videos</button>
+            <button class="tab-button" id="shortsTab">Shorts</button>
+        </div>
+
+        <main id="content-grid"></main>
     </div>
 
     <div id="videoModal" class="modal">
@@ -294,45 +358,273 @@
     </div>
 
     <script>
-        const videos = [
+        const allVideos = [
             {
-                title: "THIS NEW UPDATE ADDS FALL GUYS IN GORILLA TAG!",
-                thumbnail: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/main/mqdefault.webp",
-                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/14%20-%20THIS%20NEW%20UPDATE%20ADDS%20FALL%20GUYS%20IN%20GORILLA%20TAG!.mp4",
-                dateCreated: "Mar 24, 2024"
+                title: "i quit youtube.",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/i%20quit..png?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/01%20-%20i%20quit%20youtube..mp4",
+                dateCreated: "Jun 7, 2025",
+                type: "video"
             },
             {
-                title: "Last to leave pyramid map wins",
-                thumbnail: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/main/hqdefault.webp",
-                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/15%20-%20Last%20to%20leave%20pyramid%20map%20wins!.mp4",
-                dateCreated: "Mar 11, 2024"
+                title: "black or white but the audio is extremely high quality",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/orwhiteblack.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/02%20-%20black%20or%20white%20but%20the%20audio%20is%20extremely%20high%20quality.mp4",
+                dateCreated: "May 2, 2025",
+                type: "video"
             },
             {
-                title: "HORROR MODE AND SUMMER IN GORILLA TAG! (with @CloudGamingGT)",
-                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/main/mqdefault.jpg?raw=true",
-                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/13%20-%20HORROR%20MODE%20AND%20SUMMER%20IN%20GORILLA%20TAG!%20(with%20@CloudGamingGT).mp4",
-                dateCreated: "Jun 20, 2024" 
+                title: "DELTARUNE Nintendo Switch 2 Announce Trailer, with piano sketch music, original, and both.",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/deltarunepianoblahblahblah.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/03%20-%20DELTARUNE%20Nintendo%20Switch%202%20Announce%20Trailer,%20with%20piano%20sketch%20music,%20original,%20and%20both..mp4",
+                dateCreated: "Apr 5, 2025",
+                type: "video"
             },
             {
-                title: "GORILLA TAG LEGO UPDATE!",
-                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/legothumb.jpg?raw=true",
-                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/12%20-%20GORILLA%20TAG%20LEGO%20UPDATE!.mp4",
-                dateCreated: "Jul 15, 2024" 
+                title: "DELTARUNE CHAPTER 3+4 TRAILER",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/deltarunetrailerblahblahblah.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/04%20-%20DELTARUNE%20CHAPTER%203+4%20TRAILER.mp4",
+                dateCreated: "Apr 2, 2025",
+                type: "video"
+            },
+            {
+                title: "SOS",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/staticthumb.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/05%20-%20SOS.mp4",
+                dateCreated: "Mar 21, 2025",
+                type: "video"
+            },
+            {
+                title: "F̵̧̺͎̑͒à̵̼̜̗c̷̡̬̺̹̾̐̓í̷̥ľ̶̯̱̫̦i̸͔͗͘ṯ̵̟̠̐̑y̴̦͗̑̊:̶͔̝͑̊͘̕ ̷͓̻̩̓̄̇z̵͚͙̰̥͗ę̷̘͙͂͂̂ŗ̶̠̅o̷̭̜͉͘",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/F%CC%B5%CC%A7%CC%BA%CD%8E%CC%91%CD%92a%CC%B5%CC%BC%CC%9C%CC%97%CC%80c%CC%B7%CC%A1%CC%AC%CC%BA%CC%B9%CC%BE%CC%90%CC%93i%CC%B7%CC%A5%CC%81l%CC%B6%CC%AF%CC%B1%CC%AB%CC%A6%CC%8Ci%CC%B8%CD%94%CD%97%CD%98t%CC%B5%CC%B1%CC%9F%CC%A0%CC%90%CC%91y%CC%B4%CC%A6%CD%97%CC%91%CC%8A_%CC%B6%CD%94%CC%9D%CD%91%CC%8A%CD%98%CC%95%20%CC%B7%CD%93%CC%BB%CC%A9%CC%93%CC%84%CC%87z%CC%B5%CD%97%CD%9A%CD%99%CC%B0%CC%A5e%CC%B7%CD%82%CD%82%CC%82%CC%98%CC%A8%CD%99r%CC%B6%CC%85%CC%A7%CC%A0o%CC%B7%CD%98%CC%AD%CC%9C%CD%89.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/06%20-%20F%CC%B5%CC%91%CD%92%CC%BA%CD%8E%CC%A7a%CC%B5%CC%80%CC%BC%CC%9C%CC%97c%CC%B7%CC%BE%CC%90%CC%93%CC%AC%CC%A1%CC%BA%CC%B9i%CC%B7%CC%81%CC%A5l%CC%B6%CC%8C%CC%AF%CC%B1%CC%AB%CC%A6i%CC%B8%CD%98%CD%97%CD%94t%CC%B5%CC%90%CC%91%CC%B1%CC%9F%CC%A0y%CC%B4%CD%97%CC%91%CC%8A%CC%A6%EF%BC%9A%CC%B6%CD%91%CD%98%CC%95%CC%8A%CD%94%CC%9D%20%CC%B7%CD%83%CC%84%CC%87%CD%93%CC%BB%CC%A9z%CC%B5%CD%97%CD%9A%CD%99%CC%B0%CC%A5e%CC%B7%CD%82%CD%82%CC%82%CC%98%CC%A8%CD%99r%CC%B6%CC%85%CC%A7%CC%A0o%CC%B7%CD%98%CC%AD%CC%9C%CD%89.mp4",
+                dateCreated: "Jan 14, 2025",
+                type: "video"
+            },
+            {
+                title: "HOW TO IUINSTALL LINUXHSIPH!!!!OIUUH!!!111111",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/linuxbelike.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/07%20-%20HOW%20TO%20IUINSTALL%20LINUXHSIPH!!!!OIUUH!!!111111.mp4",
+                dateCreated: "Jan 14, 2025",
+                type: "video"
+            },
+            {
+                title: "E R R O R",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/E%20R%20R%20O%20R.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/08%20-%20E%20R%20R%20O%20R.mp4",
+                dateCreated: "Jan 12, 2025",
+                type: "video"
+            },
+            {
+                title: "First Contact",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/Firstcontacts.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/09%20-%20First%20Contact.mp4",
+                dateCreated: "Jan 12, 2025",
+                type: "video"
+            },
+            {
+                title: "MESSAGE",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/videos/MESSAGETHUMB.webp",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/10%20-%20MESSAGE.mp4",
+                dateCreated: "Dec 30, 2024",
+                type: "video"
             },
             {
                 title: "Tag them in the game 🎮🎶 #NewMusicVideo #GamingVibes",
                 thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/musictn.jpg?raw=true",
                 videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/11%20-%20Tag%20them%20in%20the%20game%20%F0%9F%8E%AE%F0%9F%8E%B6%20%23NewMusicVideo%20%23GamingVibes.mp4",
-                dateCreated: "Jul 23, 2024" 
+                dateCreated: "Jul 23, 2024",
+                type: "video"
+            },
+            {
+                title: "GORILLA TAG LEGO UPDATE!",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/legothumb.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/12%20-%20GORILLA%20TAG%20LEGO%20UPDATE!.mp4",
+                dateCreated: "Jul 15, 2024",
+                type: "video"
+            },
+            {
+                title: "HORROR MODE AND SUMMER IN GORILLA TAG! (with @CloudGamingGT)",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/main/mqdefault.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/13%20-%20HORROR%20MODE%20AND%20SUMMER%20IN%20GORILLA%20TAG!%20(with%20@CloudGamingGT).mp4",
+                dateCreated: "Jun 20, 2024",
+                type: "video"
+            },
+            {
+                title: "THIS NEW UPDATE ADDS FALL GUYS IN GORILLA TAG!",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/main/mqdefault.webp",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/14%20-%20THIS%20NEW%20UPDATE%20ADDS%20FALL%20GUYS%20IN%20GORILLA%20TAG!.mp4",
+                dateCreated: "Mar 24, 2024",
+                type: "video"
+            },
+            {
+                title: "Last to leave pyramid map wins",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/raw/refs/heads/main/hqdefault.webp",
+                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/15%20-%20Last%20to%20leave%20pyramid%20map%20wins!.mp4",
+                dateCreated: "Mar 11, 2024",
+                type: "video"
+            },
+            // NEW SHORTS
+            {
+                title: "FIVE SHOCKINGLY SHOCKING FACTS (THE LAST ONE SAVED ME)",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/factsthum.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/FIVE%20SHOCKINGLY%20SHOCKING%20FACTS%20(THE%20LAST%20ONE%20SAVED%20ME).mp4",
+                dateCreated: "Oct 12, 2024",
+                type: "short"
+            },
+            {
+                title: "Evolution of my wait screens",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/waittttttFORTHELOVEOFALLTHINGSHOLYWAIT.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/Evolution%20of%20my%20wait%20screens.mp4",
+                dateCreated: "Oct 6, 2024",
+                type: "short"
+            },
+            {
+                title: "NEW SONG CLIP 🔥🔥🔥STREAM NOW ON YT! 🔥🔥 #gorillatag #vr #gtag #gorilla",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/newsongclip.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/new_song_clip_stream_now.mp4",
+                dateCreated: "Aug 10, 2024",
+                type: "short"
+            },
+            {
+                title: "NEW SONG! 🎶🎤 #NowPlaying #NewMusicAlert",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/newdongnowplayign.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/newsong_newmusicaler_.mp4",
+                dateCreated: "Aug 7, 2024",
+                type: "short"
+            },
+            {
+                title: "CLOUDGAMINGS BANGER",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/banger.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/CLOUDGAMINGS%20BANGER.mp4",
+                dateCreated: "Aug 4, 2024",
+                type: "short"
+            },
+            {
+                title: "KNOCKOFF FLUSHY GT RETURNS! 🚽🧻 #bathroomhumor #knockoff",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/knockoffreturns.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/knockoff_returns.mp4",
+                dateCreated: "Aug 3, 2024",
+                type: "short"
+            },
+            {
+                title: "IM KNOCKOFF FLUSHYGT AT YOUR LOCAL COSTCO FOOD COURT!!!!!",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/knockoff.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/IM%20KNOCKOFF%20FLUSHYGT%20AT%20YOUR%20LOCAL%20COSTCO%20FOOD%20COURT!!!!!.mp4",
+                dateCreated: "Jul 14, 2024",
+                type: "short"
+            },
+            {
+                title: "​ @VMT ",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/vmt.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/@VMT.mp4",
+                dateCreated: "Jun 21, 2024",
+                type: "short"
+            },
+            {
+                title: "New yoorrrkkk!!",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/newyorkkkkkk.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/New%20yoorrrkkk!!.mp4",
+                dateCreated: "Jun 14, 2024",
+                type: "short"
+            },
+            {
+                title: "In New York!",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/in-new-york.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/In%20New%20York!.mp4",
+                dateCreated: "Jun 13, 2024",
+                type: "short"
+            },
+            {
+                title: "Fall guys gorilla tag real 😳",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/fallguysgtagreal.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/Fall%20guys%20gorilla%20tag%20real%20%F0%9F%98%B3.mp4",
+                dateCreated: "Jun 2, 2024",
+                type: "short"
+            },
+            {
+                title: "#joystixforfingerpainter!!",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/joystix4fingerpainter.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/joy4finger.mp4",
+                dateCreated: "May 29, 2024",
+                type: "short"
+            },
+            {
+                title: "Old gtag :) #gtag #vr #summergorillatag #gorillatagfun",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/oldgtag.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/oldgtag.mp4",
+                dateCreated: "May 25, 2024",
+                type: "short"
+            },
+            {
+                title: "#gtag #vr #gtagmods #summergorillatag #gorillatagfun #gorilla #gorillatag #monke #gtisback",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/hahafunnnieessss.jpg?raw=true",
+                videoLink: "hahafunny.mp4",
+                dateCreated: "May 24, 2024",
+                type: "short"
+            },
+            {
+                title: "Do you wanna play mini games? #gtag #vr #minigameskid",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/minigameskiddnolongerk-idsucks.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/ki-id%20sucks%20minigames%20kid%20is%20no%20more.mp4",
+                dateCreated: "May 23, 2024",
+                type: "short"
+            },
+            {
+                title: "#gtisback credits: @Atlas2202 @SourberryVR ​",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/gtisback.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/gtback.mp4",
+                dateCreated: "May 23, 2024",
+                type: "short"
+            },
+            {
+                title: "What’s 1+1? #gtag #vr #gtagmods #summergorillatag #gorillatagfun #gorilla",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/1+1.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/1+1.mp4",
+                dateCreated: "May 22, 2024",
+                type: "short"
+            },
+            {
+                title: "Game Boy time!",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/gameboy.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/gameboy.mp4",
+                dateCreated: "May 10, 2024",
+                type: "short"
+            },
+            {
+                title: "How to get out of the map in the new gtag update",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/getoutcloudmap.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/How%20to%20get%20out%20of%20the%20map%20in%20the%20new%20gtag%20update.mp4",
+                dateCreated: "May 5, 2024",
+                type: "short"
+            },
+            {
+                title: "Day two of trying to get to slippery walls",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/day2wall.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/Day%20two%20of%20trying%20to%20get%20to%20slippery%20walls.mp4",
+                dateCreated: "Mar 13, 2024",
+                type: "short"
+            },
+            {
+                title: "Day one of trying to get to slippery walls",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/day1wall.jpg?raw=true",
+                videoLink: "https://media.raysrobotics.com/joyflix%20shorts/Day%20one%20of%20trying%20to%20get%20to%20slippery%20walls.mp4",
+                dateCreated: "Mar 13, 2024",
+                type: "short"
             }
         ];
 
-        const videoGrid = document.getElementById('video-grid');
+        // Sort all videos by date (newest to oldest)
+        allVideos.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
+
+        const videoGridContainer = document.getElementById('content-grid');
         const videoModal = document.getElementById('videoModal');
         const modalVideo = document.getElementById('modalVideo');
         const modalTitle = document.getElementById('modalTitle');
         const modalDate = document.getElementById('modalDate');
         const closeButton = document.querySelector('.close-button');
+        const videosTab = document.getElementById('videosTab');
+        const shortsTab = document.getElementById('shortsTab');
 
         // Discord Webhook URL
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1381037291052601537/EQPPGauoQ2tifEchjZzgVV4PPuu7SfSJu6pBL8Rng-UitBJUiqDp8GgDPPDkCyePY6C1";
@@ -342,13 +634,11 @@
             const videoDate = new Date(dateString);
             const now = new Date();
             const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-
-            // Check if the video date is exactly one year ago today, or in the same year-ago range
-            if (videoDate.toDateString() === oneYearAgo.toDateString() || 
-                (videoDate.getFullYear() === now.getFullYear() - 1 && 
-                 videoDate.getMonth() === now.getMonth() && 
+            if (videoDate.toDateString() === oneYearAgo.toDateString() ||
+                (videoDate.getFullYear() === now.getFullYear() - 1 &&
+                 videoDate.getMonth() === now.getMonth() &&
                  videoDate.getDate() > now.getDate()) ||
-                (videoDate.getFullYear() === now.getFullYear() - 1 && 
+                (videoDate.getFullYear() === now.getFullYear() - 1 &&
                  videoDate.getMonth() > now.getMonth())) {
                 return dateString + " (one year ago)";
             } else {
@@ -378,6 +668,9 @@
         function createVideoCard(video) {
             const videoCard = document.createElement('div');
             videoCard.classList.add('video-card');
+            if (video.type === 'short') {
+                videoCard.classList.add('shorts-card');
+            }
 
             const thumbnail = document.createElement('img');
             thumbnail.src = video.thumbnail;
@@ -399,16 +692,27 @@
 
             videoCard.addEventListener('click', () => {
                 showModal(video);
-                sendDiscordMessage(`Someone clicked on "${video.title}" nice job!`);
+                const messageType = video.type === 'short' ? 'short' : 'video';
+                sendDiscordMessage(`Someone clicked on "${video.title}" (${messageType}) nice job!`);
             });
-
             return videoCard;
         }
 
-        function loadVideos() {
-            videos.forEach(video => {
-                videoGrid.appendChild(createVideoCard(video));
-            });
+        function loadContent(type) {
+            videoGridContainer.innerHTML = ''; // Clear current content
+            if (type === 'videos') {
+                videoGridContainer.classList.remove('shorts-grid');
+                videoGridContainer.classList.add('video-grid');
+                allVideos.filter(v => v.type === 'video').forEach(video => {
+                    videoGridContainer.appendChild(createVideoCard(video));
+                });
+            } else if (type === 'shorts') {
+                videoGridContainer.classList.remove('video-grid');
+                videoGridContainer.classList.add('shorts-grid');
+                allVideos.filter(v => v.type === 'short').forEach(video => {
+                    videoGridContainer.appendChild(createVideoCard(video));
+                });
+            }
         }
 
         function showModal(video) {
@@ -417,6 +721,13 @@
             modalDate.textContent = "Posted: " + getRelativeDate(video.dateCreated);
             videoModal.classList.add('active');
             document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+
+            // Adjust modal content class for shorts
+            if (video.type === 'short') {
+                videoModal.querySelector('.modal-content').classList.add('short');
+            } else {
+                videoModal.querySelector('.modal-content').classList.remove('short');
+            }
         }
 
         function closeModal() {
@@ -424,6 +735,7 @@
             modalVideo.pause();
             modalVideo.currentTime = 0;
             document.body.style.overflow = 'auto'; // Allow scrolling when modal is closed
+            videoModal.querySelector('.modal-content').classList.remove('short'); // Clean up short class
         }
 
         // Event Listeners
@@ -434,8 +746,22 @@
             }
         });
 
-        // Load videos when the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', loadVideos);
+        videosTab.addEventListener('click', () => {
+            videosTab.classList.add('active');
+            shortsTab.classList.remove('active');
+            loadContent('videos');
+        });
+
+        shortsTab.addEventListener('click', () => {
+            shortsTab.classList.add('active');
+            videosTab.classList.remove('active');
+            loadContent('shorts');
+        });
+
+        // Load videos by default when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContent('videos');
+        });
     </script>
 </body>
 </html>
