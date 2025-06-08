@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[⚠️ Suspicious Content] <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,6 +15,8 @@
             --text-color: #e0e0e0;
             --card-hover-scale: 1.05;
             --transition-speed: 0.3s ease;
+            --button-hover-bg: rgba(255, 255, 255, 0.2);
+            --button-active-bg: var(--primary-color);
         }
 
         * {
@@ -31,7 +33,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden; /* Fix: Prevent horizontal scrolling */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
             position: relative;
         }
 
@@ -117,12 +119,12 @@
         }
 
         .tab-button:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--button-hover-bg);
             transform: translateY(-2px);
         }
 
         .tab-button.active {
-            background: var(--primary-color);
+            background: var(--button-active-bg);
             border-color: var(--secondary-color);
             box-shadow: 0 0 15px rgba(142, 45, 226, 0.5);
         }
@@ -150,6 +152,8 @@
             cursor: pointer;
             position: relative;
             padding-bottom: 10px;
+            display: flex; /* For feedback button layout */
+            flex-direction: column; /* For feedback button layout */
         }
 
         .video-card:hover {
@@ -179,6 +183,7 @@
 
         .video-info {
             padding: 15px;
+            flex-grow: 1; /* Pushes button to bottom */
         }
 
         .video-info h3 {
@@ -193,10 +198,30 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
+        .feedback-button {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin: 0 15px 15px; /* Adjust margin for positioning */
+            transition: background 0.3s ease, transform 0.2s ease;
+            align-self: flex-start; /* Align button to the start of the flex container */
+        }
+
+        .feedback-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        /* Modals (General Styling) */
         .modal {
             display: none;
             position: fixed;
-            z-index: 100;
+            z-index: 1000; /* Ensure it's on top */
             left: 0;
             top: 0;
             width: 100%;
@@ -224,6 +249,7 @@
             max-width: 900px;
             animation: slideIn 0.4s ease-out;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            color: var(--text-color); /* Ensure text is readable */
         }
 
         .modal-content.short {
@@ -268,6 +294,125 @@
             transform: scale(1.1);
         }
 
+        /* Welcome Modal Specifics */
+        #welcomeModal .modal-content {
+            max-width: 500px;
+            text-align: center;
+            padding: 30px;
+        }
+        #welcomeModal h2 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+        }
+        #welcomeModal p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        #welcomeModal input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        #welcomeModal input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+        #welcomeModal .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center checkbox */
+            margin-bottom: 25px;
+        }
+        #welcomeModal input[type="checkbox"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color); /* Style checkbox */
+        }
+        #welcomeModal label {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: left; /* Align text within its space */
+            flex-grow: 1; /* Allow label to take available space */
+        }
+        #welcomeModal .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+        }
+        #welcomeModal .modal-buttons button {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s ease;
+            flex: 1; /* Make buttons take equal width */
+        }
+        #welcomeModal .modal-buttons button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        #welcomeModal #skipButton {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+        }
+        #welcomeModal #skipButton:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Feedback Modal Specifics */
+        #feedbackModal .modal-content {
+            max-width: 600px;
+            padding: 25px;
+        }
+        #feedbackModal h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        #feedbackModal textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 1em;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        #feedbackModal textarea:focus {
+            border-color: var(--primary-color);
+        }
+        #feedbackModal button {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        #feedbackModal button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             header h1 {
@@ -276,6 +421,14 @@
 
             .container {
                 padding: 20px;
+            }
+
+            .tab-switcher {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .tab-button {
+                margin: 0;
             }
 
             .video-grid, .shorts-grid {
@@ -312,6 +465,19 @@
                 top: 10px;
                 right: 15px;
             }
+
+            #welcomeModal .modal-content, #feedbackModal .modal-content {
+                padding: 20px;
+            }
+            #welcomeModal h2 {
+                font-size: 1.8em;
+            }
+            #feedbackModal h2 {
+                font-size: 1.6em;
+            }
+            #welcomeModal .modal-buttons {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 480px) {
@@ -329,6 +495,11 @@
 
             .shorts-card img {
                 height: 250px;
+            }
+
+            .tab-button {
+                font-size: 1em;
+                padding: 8px 15px;
             }
         }
     </style>
@@ -350,10 +521,36 @@
 
     <div id="videoModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
+            <span class="close-button" data-modal="videoModal">&times;</span>
             <video id="modalVideo" controls autoplay></video>
             <h2 id="modalTitle"></h2>
             <p id="modalDate"></p>
+        </div>
+    </div>
+
+    <div id="welcomeModal" class="modal">
+        <div class="modal-content">
+            <h2>Welcome to Joyflix!</h2>
+            <p>Please enter a display name to personalize your experience. This name will be shared via Discord webhook when you interact with the site (e.g., click on videos, send feedback).</p>
+            <input type="text" id="displayNameInput" placeholder="Enter your display name">
+            <div class="checkbox-container">
+                <input type="checkbox" id="consentCheckbox">
+                <label for="consentCheckbox">I agree that this display name will be stored in my browser's local storage and shared via Discord webhook for site interaction tracking (e.g., video clicks, feedback).</label>
+            </div>
+            <div class="modal-buttons">
+                <button id="agreeButton">Ok</button>
+                <button id="skipButton">Skip, I don't agree</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="feedbackModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" data-modal="feedbackModal">&times;</span>
+            <h2>Send Feedback</h2>
+            <p>What do you think should be changed or improved? Or just send a comment!</p>
+            <textarea id="feedbackTextarea" placeholder="Type your feedback here..."></textarea>
+            <button id="submitFeedbackButton">Submit Feedback</button>
         </div>
     </div>
 
@@ -396,8 +593,7 @@
             },
             {
                 title: "F̵̧̺͎̑͒à̵̼̜̗c̷̡̬̺̹̾̐̓í̷̥ľ̶̯̱̫̦i̸͔͗͘ṯ̵̟̠̐̑y̴̦͗̑̊:̶͔̝͑̊͘̕ ̷͓̻̩̓̄̇z̵͚͙̰̥͗ę̷̘͙͂͂̂ŗ̶̠̅o̷̭̜͉͘",
-                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/F%CC%B5%CC%A7%CC%BA%CD%8E%CC%91%CD%92a%CC%B5%CC%BC%CC%9C%CC%97%CC%80c%CC%B7%CC%A1%CC%AC%CC%BA%CC%B9%CC%BE%CC%90%CC%93i%CC%B7%CC%A5%CC%81l%CC%B6%CC%AF%CC%B1%CC%AB%CC%A6%CC%8Ci%CC%B8%CD%94%CD%97%CD%98t%CC%B5%CC%B1%CC%9F%CC%A0%CC%90%CC%91y%CC%B4%CC%A6%CD%97%CC%91%CC%8A_%CC%B6%CD%94%CC%9D%CD%91%CC%8A%CD%98%CC%95%20%CC%B7%CD%93%CC%BB%CC%A9%CC%93%CC%84%CC%87z%CC%B5%CD%97%CD%9A%CD%99%CC%B0%CC%A5e%CC%B7%CD%82%CD%82%CC%82%CC%98%CC%A8%CD%99r%CC%B6%CC%85%CC%A7%CC%A0o%CC%B7%CD%98%CC%AD%CC%9C%CD%89.jpg?raw=true",
-                videoLink: "https://media.raysrobotics.com/uncompressed-joyflix/06%20-%20F%CC%B5%CC%91%CD%92%CC%BA%CD%8E%CC%A7a%CC%B5%CC%80%CC%BC%CC%9C%CC%97c%CC%B7%CC%BE%CC%90%CC%93%CC%AC%CC%A1%CC%BA%CC%B9i%CC%B7%CC%81%CC%A5l%CC%B6%CC%8C%CC%AF%CC%B1%CC%AB%CC%A6i%CC%B8%CD%98%CD%97%CD%94t%CC%B5%CC%90%CC%91%CC%B1%CC%9F%CC%A0y%CC%B4%CD%97%CC%91%CC%8A%CC%A6%EF%BC%9A%CC%B6%CD%91%CD%98%CC%95%CC%8A%CD%94%CC%9D%20%CC%B7%CD%83%CC%84%CC%87%CD%93%CC%BB%CC%A9z%CC%B5%CD%97%CD%9A%CD%99%CC%B0%CC%A5e%CC%B7%CD%82%CD%82%CC%82%CC%98%CC%A8%CD%99r%CC%B6%CC%85%CC%A7%CC%A0o%CC%B7%CD%98%CC%AD%CC%9C%CD%89.mp4",
+                thumbnail: "https://github.com/Joystix-yt/Joyflix/blob/videos/F%CC%B5%CC%A7%CC%BA%CD%8E%CC%91%CD%92a%CC%B5%CC%BC%CC%9C%CC%97%CC%80c%CC%B7%CC%A1%CC%AC%CC%BA%CC%B9%CC%BE%CC%90%CC%93i%CC%B7%CC%A5%CC%81l%CC%B6%CC%AF%CC%B1%CC%AB%CC%A6%CC%8Ci%CC%B8%CD%94%CD%97%CD%98t%CC%B5%CC%B1%CC%9F%CC%A0%CC%90%CC%91y%CC%B4%CD%97%CC%91%CC%8A%CC%A6%EF%BC%9A%CC%B6%CD%91%CD%98%CC%95%CC%8A%CD%94%CC%9D%20%CC%B7%CD%83%CC%84%CC%87%CD%93%CC%BB%CC%A9z%CC%B5%CD%97%CD%9A%CD%99%CC%B0%CC%A5e%CC%B7%CD%82%CD%82%CC%82%CC%98%CC%A8%CD%99r%CC%B6%CC%85%CC%A7%CC%A0o%CC%B7%CD%98%CC%AD%CC%9C%CD%89.mp4",
                 dateCreated: "Jan 14, 2025",
                 type: "video"
             },
@@ -622,12 +818,26 @@
         const modalVideo = document.getElementById('modalVideo');
         const modalTitle = document.getElementById('modalTitle');
         const modalDate = document.getElementById('modalDate');
-        const closeButton = document.querySelector('.close-button');
+        const closeButtons = document.querySelectorAll('.close-button'); // Select all close buttons
         const videosTab = document.getElementById('videosTab');
         const shortsTab = document.getElementById('shortsTab');
 
-        // Discord Webhook URL
+        // Welcome Modal Elements
+        const welcomeModal = document.getElementById('welcomeModal');
+        const displayNameInput = document.getElementById('displayNameInput');
+        const consentCheckbox = document.getElementById('consentCheckbox');
+        const agreeButton = document.getElementById('agreeButton');
+        const skipButton = document.getElementById('skipButton');
+
+        // Feedback Modal Elements
+        const feedbackModal = document.getElementById('feedbackModal');
+        const feedbackTextarea = document.getElementById('feedbackTextarea');
+        const submitFeedbackButton = document.getElementById('submitFeedbackButton');
+
+        // Discord Webhook URL (Ensure this is correct)
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1381037291052601537/EQPPGauoQ2tifEchjZzgVV4PPuu7SfSJu6pBL8Rng-UitBJUiqDp8GgDPPDkCyePY6C1";
+
+        let userDisplayName = localStorage.getItem('displayName'); // Get display name from localStorage
 
         // Function to calculate "one year ago" for a given date
         function getRelativeDate(dateString) {
@@ -675,6 +885,12 @@
             const thumbnail = document.createElement('img');
             thumbnail.src = video.thumbnail;
             thumbnail.alt = video.title;
+            thumbnail.addEventListener('click', () => { // Click thumbnail to play video
+                showModal(video);
+                const name = userDisplayName || 'Anonymous';
+                const messageType = video.type === 'short' ? 'short' : 'video';
+                sendDiscordMessage(`"${name}" clicked on "${video.title}" (${messageType})!`);
+            });
 
             const videoInfo = document.createElement('div');
             videoInfo.classList.add('video-info');
@@ -685,16 +901,20 @@
             const date = document.createElement('p');
             date.textContent = getRelativeDate(video.dateCreated);
 
+            const feedbackBtn = document.createElement('button');
+            feedbackBtn.classList.add('feedback-button');
+            feedbackBtn.textContent = 'Feedback';
+            feedbackBtn.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent video modal from opening
+                showFeedbackModal(video);
+            });
+
             videoInfo.appendChild(title);
             videoInfo.appendChild(date);
             videoCard.appendChild(thumbnail);
             videoCard.appendChild(videoInfo);
+            videoCard.appendChild(feedbackBtn); // Add feedback button to the card
 
-            videoCard.addEventListener('click', () => {
-                showModal(video);
-                const messageType = video.type === 'short' ? 'short' : 'video';
-                sendDiscordMessage(`Someone clicked on "${video.title}" (${messageType}) nice job!`);
-            });
             return videoCard;
         }
 
@@ -730,20 +950,49 @@
             }
         }
 
-        function closeModal() {
-            videoModal.classList.remove('active');
-            modalVideo.pause();
-            modalVideo.currentTime = 0;
-            document.body.style.overflow = 'auto'; // Allow scrolling when modal is closed
-            videoModal.querySelector('.modal-content').classList.remove('short'); // Clean up short class
+        function closeModal(modalElement) {
+            modalElement.classList.remove('active');
+            if (modalElement === videoModal) {
+                modalVideo.pause();
+                modalVideo.currentTime = 0;
+                modalElement.querySelector('.modal-content').classList.remove('short'); // Clean up short class
+            } else if (modalElement === feedbackModal) {
+                feedbackTextarea.value = ''; // Clear feedback text
+            }
+            // Only re-enable scrolling if no other modals are open
+            if (!videoModal.classList.contains('active') && !welcomeModal.classList.contains('active') && !feedbackModal.classList.contains('active')) {
+                document.body.style.overflow = 'auto';
+            }
         }
 
-        // Event Listeners
-        closeButton.addEventListener('click', closeModal);
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) {
-                closeModal();
-            }
+        function showWelcomeModal() {
+            welcomeModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            displayNameInput.focus(); // Focus on the input field
+        }
+
+        function showFeedbackModal(video) {
+            feedbackModal.classList.add('active');
+            feedbackModal.dataset.videoId = video.title; // Store video ID for feedback
+            document.body.style.overflow = 'hidden';
+            feedbackTextarea.focus();
+        }
+
+        // Event Listeners for all close buttons
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modalId = button.dataset.modal;
+                closeModal(document.getElementById(modalId));
+            });
+        });
+
+        // Close modals when clicking outside their content
+        [videoModal, welcomeModal, feedbackModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal(modal);
+                }
+            });
         });
 
         videosTab.addEventListener('click', () => {
@@ -758,9 +1007,54 @@
             loadContent('shorts');
         });
 
-        // Load videos by default when the DOM is fully loaded
+        // Welcome Modal Button Actions
+        agreeButton.addEventListener('click', () => {
+            const name = displayNameInput.value.trim();
+            if (name && consentCheckbox.checked) {
+                userDisplayName = name;
+                localStorage.setItem('displayName', name);
+                closeModal(welcomeModal);
+                sendDiscordMessage(`"${userDisplayName}" agreed to terms and entered the site.`);
+            } else if (!name) {
+                alert('Please enter a display name.');
+            } else if (!consentCheckbox.checked) {
+                alert('Please agree to the terms to store your display name.');
+            }
+        });
+
+        skipButton.addEventListener('click', () => {
+            userDisplayName = 'Anonymous'; // Set to anonymous if user skips
+            localStorage.removeItem('displayName'); // Ensure no name is stored
+            closeModal(welcomeModal);
+            sendDiscordMessage(`Anonymous user skipped display name setup.`);
+        });
+
+        // Feedback Modal Submit
+        submitFeedbackButton.addEventListener('click', () => {
+            const feedback = feedbackTextarea.value.trim();
+            const videoTitleForFeedback = feedbackModal.dataset.videoId;
+            if (feedback) {
+                const name = userDisplayName || 'Anonymous';
+                sendDiscordMessage(`**Feedback from "${name}"** on video "${videoTitleForFeedback || 'N/A'}":\n\`\`\`${feedback}\`\`\``);
+                alert('Thank you for your feedback!');
+                closeModal(feedbackModal);
+            } else {
+                alert('Please enter your feedback.');
+            }
+        });
+
+
+        // Initial Load Logic
         document.addEventListener('DOMContentLoaded', () => {
-            loadContent('videos');
+            loadContent('videos'); // Load videos by default
+
+            // Show welcome modal if display name is not set
+            if (!userDisplayName) {
+                showWelcomeModal();
+            } else {
+                // If displayName exists, send a "welcome back" message
+                sendDiscordMessage(`"${userDisplayName}" returned to the site.`);
+            }
         });
     </script>
 </body>
